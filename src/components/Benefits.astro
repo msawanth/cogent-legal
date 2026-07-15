@@ -1,0 +1,70 @@
+---
+const icons = {
+  money:
+    '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+  time:
+    '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+  focus:
+    '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+  growth:
+    '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>',
+};
+
+const benefits = [
+  {
+    icon: 'money',
+    color: '#30D158',
+    title: 'Save money',
+    body: 'Every impulse you skip is money that stays in your pocket — not spent on something you’d want to return tomorrow.',
+  },
+  {
+    icon: 'time',
+    color: '#3B82F6',
+    title: 'Save time',
+    body: 'Stop pouring hours into things you’ll wish you hadn’t started. Get that time back for what actually matters.',
+  },
+  {
+    icon: 'focus',
+    color: '#BF5AF2',
+    title: 'Protect your focus',
+    body: 'Fewer late-night spirals and rabbit holes. Cogent keeps small urges from hijacking your whole day.',
+  },
+  {
+    icon: 'growth',
+    color: '#FF9F0A',
+    title: 'Build self-control',
+    body: 'Every good call nudges your score up — real proof your willpower is getting stronger over time.',
+  },
+];
+---
+
+<section class="relative px-6 py-24 sm:py-32">
+  <div class="mx-auto max-w-5xl">
+    <p class="reveal text-center text-sm font-semibold uppercase tracking-[0.3em] text-white/40">
+      Why it pays off
+    </p>
+    <h2 class="reveal mx-auto mt-4 max-w-2xl text-balance text-center text-3xl font-bold sm:text-5xl">
+      Small pauses. Big payoffs.
+    </h2>
+    <p class="reveal mx-auto mt-5 max-w-2xl text-center text-white/60 sm:text-lg">
+      The urges you skip don’t just disappear — they turn into money, time, and
+      focus you get to keep.
+    </p>
+
+    <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        benefits.map((b) => (
+          <div class="reveal rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+            <div
+              class="flex h-11 w-11 items-center justify-center rounded-xl [&>svg]:h-6 [&>svg]:w-6"
+              style={`background:${b.color}1a; color:${b.color}; box-shadow:0 0 26px ${b.color}22`}
+              set:html={icons[b.icon]}
+            />
+            <h3 class="mt-4 text-lg font-semibold">{b.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-white/60">{b.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
