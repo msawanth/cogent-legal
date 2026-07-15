@@ -107,7 +107,9 @@ const jsonLd = {
       import Lenis from 'lenis';
 
       if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1 });
+        // lerp 0.16 tracks the wheel more tightly than the floaty 0.1 default
+        // feel — still smooth, less laggy.
+        const lenis = new Lenis({ lerp: 0.16, wheelMultiplier: 1 });
         function raf(time: number) {
           lenis.raf(time);
           requestAnimationFrame(raf);

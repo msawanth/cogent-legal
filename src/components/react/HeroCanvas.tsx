@@ -233,15 +233,12 @@ function Brain({ buffers, mouse }: { buffers: Buffers; mouse: MouseRef }) {
 }
 
 class Boundary extends React.Component<
-  { onError: () => void; children: React.ReactNode },
+  { children: React.ReactNode },
   { failed: boolean }
 > {
   state = { failed: false };
   static getDerivedStateFromError() {
     return { failed: true };
-  }
-  componentDidCatch() {
-    this.props.onError();
   }
   render() {
     return this.state.failed ? null : this.props.children;
@@ -251,6 +248,8 @@ class Boundary extends React.Component<
 export default function HeroCanvas() {
   const [buffers, setBuffers] = useState<Buffers | null>(null);
   const [mobile, setMobile] = useState(false);
+  const [frameloop, setFrameloop] = useState<'always' | 'never'>('always');
+  const wrapRef = useRef<HTMLDivElement | null>(null);
   const mouse = useRef({ x: 0, y: 0, active: 0 });
 
   useEffect(() => {
@@ -265,18 +264,28 @@ export default function HeroCanvas() {
     });
     return () => {
       alive = false;
-      document.documentElement.classList.remove('webgl');
     };
   }, []);
 
+  // Pause the render loop (and its bloom pass) whenever the hero is scrolled
+  // out of view, so it doesn't compete with the rest of the page for the GPU.
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setFrameloop(entry.isIntersecting ? 'always' : 'never'),
+      { rootMargin: '120px 0px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [buffers]);
+
   if (!buffers) return null;
 
-  const showWebgl = () => document.documentElement.classList.add('webgl');
-  const hideWebgl = () => document.documentElement.classList.remove('webgl');
-
   return (
-    <Boundary onError={hideWebgl}>
+    <Boundary>
       <div
+        ref={wrapRef}
         className="absolute inset-0"
         onPointerMove={(e) => {
           const r = e.currentTarget.getBoundingClientRect();
@@ -289,14 +298,16 @@ export default function HeroCanvas() {
         }}
       >
         <Canvas
+          frameloop={frameloop}
           camera={{ position: [0, 0, 7], fov: 45 }}
-          dpr={[1, mobile ? 1.5 : 2]}
-          gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-          onCreated={showWebgl}
+          dpr={[1, mobile ? 1.5 : 1.75]}
+          gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
         >
           <Brain buffers={buffers} mouse={mouse} />
           {!mobile && (
-            <EffectComposer>
+            /* MSAA off: additive point sprites gain nothing from it, and it is
+               the single most expensive part of a fullscreen composer pass. */
+            <EffectComposer multisampling={0}>
               <Bloom
                 intensity={0.85}
                 luminanceThreshold={0.08}

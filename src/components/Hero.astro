@@ -29,20 +29,19 @@ import StoreBadges from './StoreBadges.astro';
 
   <!-- Full-bleed 3D brain (behind the copy). #hero-visual is the WebGL mount hook. -->
   <div id="hero-visual" class="absolute inset-0 z-0">
-    <!-- Static fallback: shown until WebGL takes over (and whenever it can't:
-         reduced motion, no WebGL, or an error). -->
-    <div
-      class="hero-logo-fallback absolute inset-0 grid place-items-center transition-opacity duration-700"
-    >
-      <Image
-        src={logo}
-        alt="Cogent — a brain split into a chaotic, impulsive hemisphere and an ordered, logical one"
-        width={440}
-        height={440}
-        class="float w-[min(64vw,420px)] rounded-[22%] opacity-90"
-      />
-    </div>
     <HeroCanvas client:only="react" />
+  </div>
+
+  <!-- Static brand mark, top-left. -->
+  <div class="absolute top-6 left-6 z-20 flex items-center gap-3 sm:top-8 sm:left-8">
+    <Image
+      src={logo}
+      alt="Cogent logo — a brain split between impulse and logic"
+      width={80}
+      height={80}
+      class="h-9 w-9 rounded-xl border border-white/10 sm:h-10 sm:w-10"
+    />
+    <span class="text-base font-semibold tracking-tight text-white/90">Cogent</span>
   </div>
 
   <!-- Legibility scrim over the particles, beneath the copy. -->
@@ -55,11 +54,8 @@ import StoreBadges from './StoreBadges.astro';
   <!-- Copy overlay. pointer-events pass through to the canvas except on controls,
        so the particles react to the cursor across the whole hero. -->
   <div class="pointer-events-none relative z-10 flex flex-col items-center">
-    <p class="reveal text-sm font-semibold uppercase tracking-[0.35em] text-white/45">
-      Cogent
-    </p>
     <h1
-      class="reveal mt-5 max-w-3xl text-balance text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl"
+      class="reveal max-w-3xl text-balance text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl"
       style="text-shadow: 0 2px 40px rgba(0,0,0,0.55);"
     >
       Beat the urge before it costs you.
