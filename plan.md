@@ -107,7 +107,7 @@ as you scroll. A stream of glowing particles = a single impulse moving through t
 |---|---|---|---|
 | **1. Impulse** | Brain Dump | Fast, jittery, hot particles racing outward; a spiking pulse-line. | red/amber `#FF453A` `#FF9F0A` |
 | **2. Caught** | Gatekeeper (Gemini) | The stream hits a lens/membrane; particles get sorted; bias labels surface ("sunk cost", "FOMO"). | amber → indigo |
-| **3. Quarantine** | 48h cooling-off | Time dilation — everything slows; a cool orb holds the impulse; a 48h ring winds down. | cool blue `#3B82F6` |
+| **3. Quarantine** | Adaptive cooling-off | Time dilation — everything slows; a cool orb holds the impulse; a cooling-off ring winds down. | cool blue `#3B82F6` |
 | **4. Socratic** | Interrogator (Claude) | Branching light-paths / a dialogue lattice; questions ripple. | indigo `#5E5CE6` |
 | **5. Clarity** | Post-Mortem → ELO | Chaos resolves into ordered geometry; a rationality score rises. | calm ink + green `#30D158` |
 
@@ -117,7 +117,7 @@ as you scroll. A stream of glowing particles = a single impulse moving through t
   that settle into the letters on load (ties to §8 — the wordmark *is* the logo).
 - Magnetic CTA buttons; scroll-velocity-driven bloom/haze.
 - The small **blue underline** accent from the splash reused as a recurring motif
-  (progress rail, section divider, the 48h ring).
+  (progress rail, section divider, the cooling-off ring).
 
 ---
 
