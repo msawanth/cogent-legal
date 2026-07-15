@@ -1,0 +1,28 @@
+---
+import { SUPPORT_EMAIL } from '../lib/site';
+---
+
+<footer class="border-t border-white/10 px-6 py-12 text-center">
+  <p class="text-lg font-semibold tracking-tight text-white/80">Cogent</p>
+  <p class="mt-1 text-sm text-white/40">Think clearly. Decide better.</p>
+
+  <nav class="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
+    <a href="/privacy.html" class="text-white/60 transition-colors hover:text-white">
+      Privacy Policy
+    </a>
+    <a href="/terms.html" class="text-white/60 transition-colors hover:text-white">
+      Terms of Service
+    </a>
+    <a href="/delete-account.html" class="text-white/60 transition-colors hover:text-white">
+      Account Deletion
+    </a>
+    <a
+      href={`mailto:${SUPPORT_EMAIL}`}
+      class="text-white/60 transition-colors hover:text-white"
+    >
+      Support
+    </a>
+  </nav>
+
+  <span class="mt-6 block text-xs text-white/30">© 2026 Mithilesh Sawanth</span>
+</footer>

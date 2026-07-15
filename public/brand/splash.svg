@@ -1,0 +1,13 @@
+<svg width="720" height="1280" viewBox="0 0 720 1280" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Cogent splash screen</title>
+  <desc>The wordmark Cogent with the tagline Think clearly. Decide better. centered on a dark background.</desc>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;700&amp;display=swap');
+    .title { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; }
+    .sub { font-family: 'Inter', system-ui, sans-serif; font-weight: 500; }
+  </style>
+  <rect x="0" y="0" width="720" height="1280" fill="#0D0F14"/>
+  <text class="title" x="360" y="628" text-anchor="middle" font-size="108" fill="#F2F2F7" letter-spacing="-3">Cogent</text>
+  <text class="sub" x="360" y="684" text-anchor="middle" font-size="29" fill="#8E8E93" letter-spacing="0.2">Think clearly. Decide better.</text>
+  <rect x="332" y="724" width="56" height="3" rx="1.5" fill="#3B82F6"/>
+</svg>

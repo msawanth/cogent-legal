@@ -1,0 +1,23 @@
+---
+import StoreBadges from './StoreBadges.astro';
+---
+
+<section class="relative overflow-hidden px-6 py-28 text-center sm:py-36">
+  <div class="pointer-events-none absolute inset-0 -z-10">
+    <div
+      class="absolute top-1/2 left-1/2 h-[50vh] w-[80vw] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40 blur-3xl"
+      style="background: radial-gradient(circle, rgba(94,92,230,0.25), transparent 60%);"
+    >
+    </div>
+  </div>
+
+  <h2 class="reveal mx-auto max-w-2xl text-balance text-4xl font-bold sm:text-6xl">
+    Give logic the last word.
+  </h2>
+  <p class="reveal mx-auto mt-5 max-w-xl text-white/65 sm:text-lg">
+    Turn your next impulsive “yes” into a decision you’d make again. Available now
+    on iPhone.
+  </p>
+
+  <StoreBadges class="reveal mt-9" center />
+</section>

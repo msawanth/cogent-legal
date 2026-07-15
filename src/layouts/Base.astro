@@ -1,0 +1,159 @@
+---
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+import { APP_STORE_URL } from '../lib/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Cogent — Think clearly. Decide better.',
+  description = 'Cogent is an AI decision coach. It catches impulsive choices, names the bias driving them, and holds them in a 48-hour cooling-off — so the logical half of your brain gets the final word.',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL('/og.png', Astro.site).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Cogent',
+  applicationCategory: 'LifestyleApplication',
+  operatingSystem: 'iOS',
+  description,
+  url: 'https://iocogent.com',
+  downloadUrl: APP_STORE_URL,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  publisher: { '@type': 'Person', name: 'Mithilesh Sawanth' },
+};
+---
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <script is:inline>
+      document.documentElement.classList.replace('no-js', 'js');
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#0D0F14" />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Cogent" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(jsonLd)}
+    />
+  </head>
+  <body class="min-h-dvh overflow-x-hidden bg-bg font-sans text-ink antialiased">
+    <slot />
+
+    <script>
+      // Reveal-on-scroll. Fires for elements already in the viewport on load,
+      // so above-the-fold content (the hero) shows immediately.
+      const reveals = document.querySelectorAll('.reveal');
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce || !('IntersectionObserver' in window)) {
+        reveals.forEach((el) => el.classList.add('is-visible'));
+      } else {
+        const io = new IntersectionObserver(
+          (entries, obs) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                obs.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+        );
+        reveals.forEach((el) => io.observe(el));
+
+        // Insurance: reveal anything already in the first viewport (the hero) on
+        // the first frame, so above-the-fold content never waits on the observer.
+        requestAnimationFrame(() => {
+          const vh = window.innerHeight;
+          for (const el of reveals) {
+            if (el.getBoundingClientRect().top < vh * 0.9) {
+              el.classList.add('is-visible');
+            }
+          }
+        });
+      }
+    </script>
+
+    <script>
+      // Lenis smooth scroll — premium scroll feel. Skipped under reduced motion,
+      // where native scrolling stays crisp and instant.
+      import Lenis from 'lenis';
+
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1 });
+        function raf(time: number) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // Smooth-scroll same-page anchor links (e.g. the hero scroll cue).
+        document.querySelectorAll('a[href^="#"]').forEach((a) => {
+          a.addEventListener('click', (e) => {
+            const id = a.getAttribute('href');
+            if (!id || id === '#') return;
+            const target = document.querySelector(id);
+            if (target) {
+              e.preventDefault();
+              lenis.scrollTo(target as HTMLElement, { offset: 0 });
+            }
+          });
+        });
+      }
+    </script>
+
+    <script>
+      // Magnetic buttons — the element eases toward the cursor on hover.
+      // Skipped under reduced motion and on coarse (touch) pointers.
+      const fine = window.matchMedia('(pointer: fine)').matches;
+      const reduceMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)',
+      ).matches;
+
+      if (fine && !reduceMotion) {
+        document
+          .querySelectorAll<HTMLElement>('[data-magnetic]')
+          .forEach((el) => {
+            const strength = Number(el.dataset.magnetic) || 0.3;
+            el.style.transition = 'transform 0.25s cubic-bezier(0.22, 1, 0.36, 1)';
+            el.addEventListener('pointermove', (e) => {
+              const r = el.getBoundingClientRect();
+              const x = e.clientX - (r.left + r.width / 2);
+              const y = e.clientY - (r.top + r.height / 2);
+              el.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
+            });
+            el.addEventListener('pointerleave', () => {
+              el.style.transform = '';
+            });
+          });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,100 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.png';
+import HeroCanvas from './react/HeroCanvas.tsx';
+import StoreBadges from './StoreBadges.astro';
+---
+
+<section
+  class="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden px-6 py-24 text-center"
+>
+  <!-- Ambient duality glows: warm (impulse) at left, cool (logic) at right. -->
+  <div class="pointer-events-none absolute inset-0 -z-10">
+    <div
+      class="pulse-glow absolute -top-1/4 left-1/2 h-[70vh] w-[70vh] -translate-x-1/2 rounded-full blur-3xl"
+      style="background: radial-gradient(circle, rgba(94,92,230,0.20), transparent 62%);"
+    >
+    </div>
+    <div
+      class="absolute top-1/3 left-0 h-[42vh] w-[42vh] rounded-full opacity-40 blur-3xl"
+      style="background: radial-gradient(circle, rgba(255,69,58,0.14), transparent 65%);"
+    >
+    </div>
+    <div
+      class="absolute top-1/3 right-0 h-[42vh] w-[42vh] rounded-full opacity-40 blur-3xl"
+      style="background: radial-gradient(circle, rgba(59,130,246,0.16), transparent 65%);"
+    >
+    </div>
+  </div>
+
+  <!-- Full-bleed 3D brain (behind the copy). #hero-visual is the WebGL mount hook. -->
+  <div id="hero-visual" class="absolute inset-0 z-0">
+    <!-- Static fallback: shown until WebGL takes over (and whenever it can't:
+         reduced motion, no WebGL, or an error). -->
+    <div
+      class="hero-logo-fallback absolute inset-0 grid place-items-center transition-opacity duration-700"
+    >
+      <Image
+        src={logo}
+        alt="Cogent — a brain split into a chaotic, impulsive hemisphere and an ordered, logical one"
+        width={440}
+        height={440}
+        class="float w-[min(64vw,420px)] rounded-[22%] opacity-90"
+      />
+    </div>
+    <HeroCanvas client:only="react" />
+  </div>
+
+  <!-- Legibility scrim over the particles, beneath the copy. -->
+  <div
+    class="pointer-events-none absolute inset-0 z-[1]"
+    style="background: radial-gradient(60% 52% at 50% 46%, rgba(13,15,20,0.74) 0%, rgba(13,15,20,0.34) 46%, rgba(13,15,20,0) 74%);"
+  >
+  </div>
+
+  <!-- Copy overlay. pointer-events pass through to the canvas except on controls,
+       so the particles react to the cursor across the whole hero. -->
+  <div class="pointer-events-none relative z-10 flex flex-col items-center">
+    <p class="reveal text-sm font-semibold uppercase tracking-[0.35em] text-white/45">
+      Cogent
+    </p>
+    <h1
+      class="reveal mt-5 max-w-3xl text-balance text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl"
+      style="text-shadow: 0 2px 40px rgba(0,0,0,0.55);"
+    >
+      Intercept the impulse before it becomes a decision.
+    </h1>
+    <p
+      class="reveal mt-6 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg"
+      style="text-shadow: 0 1px 22px rgba(0,0,0,0.6);"
+    >
+      Cogent is an AI decision coach. It catches impulsive choices, names the bias
+      driving them, and holds them in a 48-hour cooling-off — so the logical half of
+      your brain gets the final word.
+    </p>
+
+    <div class="reveal pointer-events-auto mt-10">
+      <StoreBadges />
+    </div>
+  </div>
+
+  <a
+    href="#how"
+    aria-label="See how it works"
+    class="reveal pointer-events-auto absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-white/35 transition-colors hover:text-white/70"
+  >
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="float"
+    >
+      <path d="M12 5v14M5 12l7 7 7-7"></path>
+    </svg>
+  </a>
+</section>

@@ -1,0 +1,49 @@
+---
+import { Image } from 'astro:assets';
+import s01 from '../assets/screens/01_dashboard.png';
+import s02 from '../assets/screens/02_bias.png';
+import s03 from '../assets/screens/03_pause.png';
+import s04 from '../assets/screens/04_socratic.png';
+import s05 from '../assets/screens/05_history.png';
+import s06 from '../assets/screens/06_braindump.png';
+
+const shots = [
+  { src: s06, alt: 'Brain dump — capture an impulse by voice or text' },
+  { src: s02, alt: 'Bias detection — the gatekeeper names the cognitive bias' },
+  { src: s03, alt: 'Quarantine — a 48-hour cooling-off lock' },
+  { src: s04, alt: 'Socratic interrogation — an AI gut-check' },
+  { src: s05, alt: 'History — your regret ledger and outcomes' },
+  { src: s01, alt: 'Dashboard — protected capital and a rising rationality score' },
+];
+---
+
+<section class="relative py-24 sm:py-32">
+  <div class="mx-auto max-w-3xl px-6 text-center">
+    <p class="reveal text-sm font-semibold uppercase tracking-[0.3em] text-white/40">
+      A look inside
+    </p>
+    <h2 class="reveal mx-auto mt-4 max-w-xl text-balance text-3xl font-bold sm:text-5xl">
+      Designed to make you slow down.
+    </h2>
+  </div>
+
+  <div class="mx-auto mt-12 max-w-6xl">
+    <div class="filmstrip flex snap-x gap-5 overflow-x-auto px-6 pb-6 sm:gap-7">
+      {
+        shots.map((s) => (
+          <figure class="reveal shrink-0 snap-center">
+            <Image
+              src={s.src}
+              alt={s.alt}
+              width={640}
+              densities={[1, 2]}
+              loading="lazy"
+              class="h-auto w-60 rounded-2xl border border-white/10 sm:w-72"
+            />
+          </figure>
+        ))
+      }
+      <div class="w-1 shrink-0" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>

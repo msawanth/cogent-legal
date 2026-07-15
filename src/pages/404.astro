@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Page not found — Cogent"
+  description="This page doesn't exist. Head back to Cogent."
+>
+  <main
+    class="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden px-6 py-24 text-center"
+  >
+    <div
+      class="pointer-events-none absolute inset-0 -z-10"
+      style="background: radial-gradient(900px 700px at 50% -10%, rgba(94,92,230,0.18), transparent 60%);"
+    >
+    </div>
+
+    <p class="text-sm font-semibold uppercase tracking-[0.35em] text-white/40">
+      Cogent
+    </p>
+    <h1 class="mt-5 text-7xl font-bold tracking-tight sm:text-8xl">404</h1>
+    <p class="mt-4 max-w-md text-lg text-white/65">
+      This page took a 48-hour cooling-off and never came back.
+    </p>
+
+    <a
+      href="/"
+      class="mt-9 rounded-xl bg-indigo px-7 py-3.5 text-base font-semibold text-white transition-transform hover:-translate-y-0.5 hover:bg-[#6f6df0]"
+    >
+      Back home
+    </a>
+
+    <nav class="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
+      <a href="/privacy.html" class="text-white/55 transition-colors hover:text-white">
+        Privacy
+      </a>
+      <a href="/terms.html" class="text-white/55 transition-colors hover:text-white">
+        Terms
+      </a>
+      <a
+        href="/delete-account.html"
+        class="text-white/55 transition-colors hover:text-white"
+      >
+        Account Deletion
+      </a>
+    </nav>
+  </main>
+</Base>

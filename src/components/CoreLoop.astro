@@ -1,0 +1,272 @@
+---
+const stages = [
+  {
+    n: '01',
+    tag: 'Capture',
+    name: 'Brain Dump',
+    color: '#FF453A',
+    body: 'Dump the raw urge — by voice or text — the second it strikes. No judgement, no friction. Just get it out of your head and into Cogent.',
+  },
+  {
+    n: '02',
+    tag: 'Detect the bias',
+    name: 'Gatekeeper',
+    color: '#FF9F0A',
+    body: 'A gatekeeper model classifies the impulse and names the cognitive bias behind it — sunk cost, FOMO, anchoring — and waves off the ones that are really just noise.',
+  },
+  {
+    n: '03',
+    tag: '48-hour cooling-off',
+    name: 'Quarantine',
+    color: '#3B82F6',
+    body: 'The impulse is locked for 48 hours. You can’t act on it while the heat is high — and most urges simply evaporate before the timer runs out.',
+  },
+  {
+    n: '04',
+    tag: 'Socratic gut-check',
+    name: 'Interrogation',
+    color: '#5E5CE6',
+    body: 'When the lock lifts, Cogent asks the hard questions your future self would — a Socratic back-and-forth that pressure-tests the decision instead of cheering it on.',
+  },
+  {
+    n: '05',
+    tag: 'Rationality score',
+    name: 'Post-Mortem',
+    color: '#30D158',
+    body: 'Thirty days later, rate how it actually turned out. Every disciplined call raises your ELO rationality score and sharpens the coaching next time.',
+  },
+];
+---
+
+<section id="how" class="relative px-6 py-24 sm:py-32">
+  <div class="mx-auto max-w-3xl text-center">
+    <p class="reveal text-sm font-semibold uppercase tracking-[0.3em] text-white/40">
+      How it works
+    </p>
+    <h2 class="reveal mx-auto mt-4 max-w-2xl text-balance text-center text-3xl font-bold sm:text-5xl">
+      From impulse to clarity, in five steps.
+    </h2>
+  </div>
+
+  <div class="mx-auto mt-10 max-w-6xl md:grid md:grid-cols-[1fr_1.1fr] md:gap-14">
+    <!-- Sticky "impulse cooling" scene (desktop). Falls back to the CSS glow
+         orb + static label under reduced motion / no JS. -->
+    <div class="hidden md:block">
+      <div class="sticky top-0 flex h-dvh items-center justify-center">
+        <div class="loop-visual relative aspect-square w-full max-w-md">
+          <canvas class="loop-canvas absolute inset-0 h-full w-full"></canvas>
+          <div class="pointer-events-none absolute inset-0 grid place-items-center text-center">
+            <div>
+              <div
+                class="loop-label-tag text-[11px] font-bold uppercase tracking-[0.25em]"
+                style={`color:${stages[0].color}`}
+              >
+                {stages[0].tag}
+              </div>
+              <div class="loop-label-name mt-1 text-2xl font-semibold text-white/90">
+                {stages[0].name}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stages (always present + readable; the scene is pure enhancement). -->
+    <ol class="relative">
+      <div
+        class="absolute top-2 bottom-2 left-[19px] w-px bg-linear-to-b from-red via-blue to-green opacity-30 sm:left-[23px]"
+        aria-hidden="true"
+      >
+      </div>
+      {
+        stages.map((s, i) => (
+          <li
+            class="loop-stage relative flex items-start gap-5 py-8 sm:gap-7 md:min-h-[60vh] md:items-center md:py-0"
+            data-index={i}
+            data-tag={s.tag}
+            data-name={s.name}
+            data-color={s.color}
+          >
+            <div
+              class="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border bg-bg text-sm font-bold sm:h-12 sm:w-12"
+              style={`border-color:${s.color}; color:${s.color}; box-shadow:0 0 24px ${s.color}55`}
+            >
+              {s.n}
+            </div>
+            <div>
+              <span
+                class="text-xs font-bold uppercase tracking-[0.25em]"
+                style={`color:${s.color}`}
+              >
+                {s.tag}
+              </span>
+              <h3 class="mt-1 text-xl font-semibold sm:text-2xl">{s.name}</h3>
+              <p class="mt-2 leading-relaxed text-white/60">{s.body}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<script>
+  const section = document.getElementById('how');
+  const canvas = section?.querySelector<HTMLCanvasElement>('.loop-canvas');
+  const stageEls = section
+    ? Array.from(section.querySelectorAll<HTMLElement>('.loop-stage'))
+    : [];
+  const labelTag = section?.querySelector<HTMLElement>('.loop-label-tag');
+  const labelName = section?.querySelector<HTMLElement>('.loop-label-name');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const desktop = window.matchMedia('(min-width: 768px)');
+
+  const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
+  const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+  function hexToRgb(hex: string): [number, number, number] {
+    const m = hex.replace('#', '');
+    const s = m.length === 3 ? m.split('').map((c) => c + c).join('') : m;
+    const n = parseInt(s, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+
+  if (
+    section &&
+    canvas &&
+    labelTag &&
+    labelName &&
+    stageEls.length &&
+    !reduce &&
+    desktop.matches
+  ) {
+    const ctx = canvas.getContext('2d');
+    if (ctx) initScene(section, canvas, ctx, stageEls, labelTag, labelName);
+  }
+
+  function initScene(
+    section: HTMLElement,
+    canvas: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D,
+    stageEls: HTMLElement[],
+    labelTag: HTMLElement,
+    labelName: HTMLElement,
+  ) {
+    const TAU = Math.PI * 2;
+    const stages = stageEls.map((el) => ({
+      tag: el.dataset.tag || '',
+      name: el.dataset.name || '',
+      color: hexToRgb(el.dataset.color || '#5e5ce6'),
+    }));
+
+    const particles = Array.from({ length: 420 }, () => ({
+      ang: Math.random() * TAU,
+      rad: 0.22 + Math.random() * 0.72,
+      seed: Math.random() * TAU,
+      spd: 0.25 + Math.random() * 0.85,
+      size: 0.7 + Math.random() * 1.7,
+      alpha: 0.35 + Math.random() * 0.5,
+    }));
+
+    let w = 0;
+    let h = 0;
+    function resize() {
+      const r = canvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = r.width;
+      h = r.height;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    function progress() {
+      const total = section.offsetHeight - window.innerHeight;
+      const scrolled = clamp(
+        -section.getBoundingClientRect().top,
+        0,
+        Math.max(total, 1),
+      );
+      return total > 0 ? scrolled / total : 0;
+    }
+
+    function colorAt(p: number): [number, number, number] {
+      const n = stages.length - 1;
+      const x = clamp(p, 0, 1) * n;
+      const i = Math.min(Math.floor(x), n - 1);
+      const t = x - i;
+      const a = stages[i].color;
+      const b = stages[i + 1].color;
+      return [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+    }
+
+    let lastIdx = -1;
+    function setActive(idx: number) {
+      stageEls.forEach((el, i) => {
+        const d = Math.abs(i - idx);
+        el.style.opacity = d === 0 ? '1' : d === 1 ? '0.55' : '0.3';
+      });
+      const s = stages[idx];
+      labelTag.textContent = s.tag;
+      labelTag.style.color = `rgb(${s.color[0] | 0},${s.color[1] | 0},${s.color[2] | 0})`;
+      labelName.textContent = s.name;
+    }
+
+    function draw(t: number, p: number) {
+      ctx.clearRect(0, 0, w, h);
+      const cx = w / 2;
+      const cy = h / 2;
+      const maxR = Math.min(w, h) * 0.42;
+      const calm = clamp(p, 0, 1);
+      const jitter = 1 - calm;
+      const [cr, cg, cb] = colorAt(p);
+      const rc = cr | 0;
+      const gc = cg | 0;
+      const bc = cb | 0;
+
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR * 1.25);
+      grad.addColorStop(0, `rgba(${rc},${gc},${bc},0.15)`);
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.globalCompositeOperation = 'lighter';
+      for (const pt of particles) {
+        const angle = pt.ang + t * pt.spd * (0.25 + jitter * 1.7);
+        const noise =
+          Math.sin(t * 1.6 * pt.spd + pt.seed) * 0.5 +
+          Math.sin(t * 3.1 + pt.seed * 1.7) * 0.3;
+        const r = maxR * (pt.rad + noise * 0.28 * jitter);
+        const x = cx + Math.cos(angle) * r;
+        const y = cy + Math.sin(angle) * r;
+        const sz = pt.size * (1 + calm * 0.5);
+        ctx.fillStyle = `rgba(${rc},${gc},${bc},${pt.alpha * 0.22})`;
+        ctx.beginPath();
+        ctx.arc(x, y, sz * 3, 0, TAU);
+        ctx.fill();
+        ctx.fillStyle = `rgba(${rc},${gc},${bc},${pt.alpha})`;
+        ctx.beginPath();
+        ctx.arc(x, y, sz, 0, TAU);
+        ctx.fill();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    function frame(now: number) {
+      const p = progress();
+      const idx = clamp(Math.floor(p * stages.length), 0, stages.length - 1);
+      if (idx !== lastIdx) {
+        setActive(idx);
+        lastIdx = idx;
+      }
+      const rect = section.getBoundingClientRect();
+      if (rect.bottom > 0 && rect.top < window.innerHeight) draw(now / 1000, p);
+      requestAnimationFrame(frame);
+    }
+
+    setActive(0);
+    requestAnimationFrame(frame);
+  }
+</script>

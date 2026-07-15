@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://iocogent.com/sitemap-index.xml
